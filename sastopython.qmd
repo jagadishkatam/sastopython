@@ -1,0 +1,297 @@
+---
+title: "SAS <-> Python :: CHEAT SHEET"
+format: html
+editor: visual
+execute:
+  enabled: false
+---
+
+# Introduction
+
+This guide aims to familiarise SAS users with Python. Python examples make use of pandas & numpy libraries.
+
+##### import pandas as pd
+
+##### import numpy as np
+
+## Datasets; drop, keep & rename variables
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+new_data = old_data
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data (keep=id);
+set old_data (drop=job_title) ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+new_data = old_data.drop(columns=['job_title'])
+# keep column 'id'
+new_data = old_data[['id']]
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data (drop= temp: );
+set old_data;
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+new_data = old_data.drop(columns=[col for col in old_data.columns if col.startswith("temp")])
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+rename old_name = new_name;
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
+```
+:::
+:::::
+
+## Conditional filtering
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+if Sex = "M";
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+new_data = old_data[old_data["Sex"] == "M"]
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+if year in (2010,2011,2012);
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+new_data = old_data[old_data["year"].isin([2010,2011,2012])]
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+by id ;
+if first.id ;
+run;
+
+
+```
+:::
+
+::: g-col-8
+```{python}
+new_data = old_data.groupby("id").head(1)
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+if dob > "25APR1990"d;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+# Convert 'date_of_birth' to datetime format
+old_data["dob"] = pd.to_datetime(old_data["dob"])
+# Filter by a specific date (e.g., born after 1990-04-25)
+new_data = old_data[old_data["dob"] > "1990-04-25"]
+```
+:::
+:::::
+
+## New variables, conditional editing
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+total_income = wages + benefits ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+# Approach 1
+old_data["total_income"] = old_data["wages"] + old_data["benefits"]
+new_data = old_data
+
+# Approach 2
+new_data = old_data.assign(total_income = old_data["wages"] + old_data["benefits"])
+
+# Approach 3
+old_data.eval("total_income = wages + benefits", inplace=True)
+new_data = old_data
+
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+if hours > 30 then full_time = "Y";
+else full_time = "N";
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+# Approach 1
+old_data["full_time"] = old_data["hours"].apply(lambda x: 'Y' if x > 30 else 'N')
+new_data = old_data
+
+# Approach 2
+old_data["full_time"] = np.where(old_data["hours"] > 90, 'Y', 'N')
+new_data = old_data
+
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+if temp > 20 then weather = "Warm";
+else if temp > 10 then weather = "Mild";
+else weather = "Cold";
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+# Define a function to implement if-elif-else logic
+def calculate_merit(x):
+    if x > 20:
+        return "Warm"
+    elif x > 10:
+        return "Mild"
+    else:
+        return "Cold"
+
+# Approach 1
+old_data["weather"] = old_data["temp"].apply(calculate_merit)
+
+# Approach 2
+old_data["weather"] = old_data["temp"].apply(lambda x: calculate_merit(x))
+
+new_data = old_data
+```
+:::
+:::::
+
+## Counting and Summarising
+
+::::: grid
+::: g-col-4
+```{sas}
+proc freq data = old_data ;
+table job_type ;
+run;
+
+
+```
+:::
+
+::: g-col-8
+```{python}
+count = old_data['job_type'].value_counts()
+
+print(count)
+```
+:::
+:::::
+
+::::: grid
+::: g-col-4
+```{sas}
+proc freq data = old_data ;
+table job_type*region ;
+run;
+
+
+```
+:::
+
+::: g-col-8
+```{python}
+count = old_data.groupby(["job_type", "region"]).size().reset_index(name="count")
+
+print(count)
+```
+:::
+:::::
