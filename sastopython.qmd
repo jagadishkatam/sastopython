@@ -1,9 +1,13 @@
 ---
 title: "SAS <-> Python :: CHEAT SHEET"
-format: html
+format:
+  html:
+    css: styles.css
 editor: visual
 execute:
   enabled: false
+toc: true
+toc-location: left
 ---
 
 # Introduction
@@ -284,6 +288,30 @@ table job_type*region ;
 run;
 
 
+```
+:::
+
+::: g-col-8
+```{python}
+count = old_data.groupby(["job_type", "region"]).size().reset_index(name="count")
+
+print(count)
+```
+:::
+:::::
+
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+proc summary data = old_data nway ;
+class job_type region ;
+var salary ;
+output out = new_data
+sum( salary ) = total_salaries ;
+run;
 ```
 :::
 

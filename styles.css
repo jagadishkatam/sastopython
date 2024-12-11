@@ -1,0 +1,11 @@
+/* Adjust the sidebar width */
+.sidebar-toc {
+  width: 200px; /* Change the width of the sidebar (default is ~250px) */
+}
+
+/* Style the main content */
+body {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+}
+
