@@ -12,7 +12,7 @@ toc-location: left
 
 # Introduction
 
-This guide aims to familiarise SAS users with Python. Python examples make use of pandas & numpy libraries.
+This guide aims to familiarise SAS users with Python. Python examples make use of pandas, numpy, matplotlib & seaborn libraries.
 
 ###### import pandas as pd
 ###### import numpy as np
@@ -745,176 +745,6 @@ new_data = old_data
 :::
 :::::
 
-## Some plotting in R vs Python
-
-::::: grid
-::: g-col-4
-```{r}
-ggplot( my_data , aes( year , sales ) ) +
-geom_point( ) + geom_line( )
-```
-:::
-
-::: g-col-8
-```{python}
-# Create the plot
-plt.figure(figsize=(8, 6))
-sns.lineplot(data=my_data, x='year', y='sales', marker='o', markersize=8)  # Line with points
-
-# Set the x-axis to display only integer values (no fractional years)
-plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-
-# Remove grid lines
-plt.grid(False)
-
-# Access the current axis
-ax = plt.gca()
-
-# Remove the top and right spines (often associated with x2 and y2 axes)
-ax.spines['top'].set_visible(False)
-ax.spines['right'].set_visible(False)
-
-# Add titles and labels
-plt.title('Sales Over Time')
-plt.xlabel('Year')
-plt.ylabel('Sales')
-
-# Display grid and show the plot
-plt.show()
-```
-
-
-:::
-:::::
-
-
-
-::::: grid
-::: g-col-4
-```{r}
-ggplot( my_data , aes( year , sales ) ) +
-geom_point( ) + geom_line( ) + 
-ylim(0, 40) + 
-labs(x = "" , y = "Sales per year")
-```
-:::
-
-::: g-col-8
-```{python}
-# Create the plot
-plt.figure(figsize=(8, 6))
-sns.lineplot(data=my_data, x='year', y='sales', marker='o', markersize=8)  # Line with points
-
-# Set the x-axis to display only integer values (no fractional years)
-plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-
-# Remove grid lines
-plt.grid(False)
-
-# Ensure the y-axis starts from 0
-plt.ylim(0, None)  # None lets matplotlib automatically determine the upper limit
-
-# Access the current axis
-ax = plt.gca()
-
-# Remove the top and right spines (often associated with x2 and y2 axes)
-ax.spines['top'].set_visible(False)
-ax.spines['right'].set_visible(False)
-
-# Add titles and labels
-plt.title('Sales Over Time')
-plt.xlabel('Year')
-plt.ylabel('Sales')
-
-# Display grid and show the plot
-plt.show()
-```
-
-
-:::
-:::::
-
-
-
-::::: grid
-::: g-col-4
-```{r}
-ggplot(my_data, aes( year, sales, colour = dept) ) +
-geom_point( ) + geom_line( ) 
-```
-:::
-
-::: g-col-8
-```{python}
-# Create the plot
-plt.figure(figsize=(8, 6))
-sns.lineplot(data=my_data, x='year', y='sales', hue='dept' ,marker='o', markersize=8)  # Line with points
-
-# Set the x-axis to display only integer values (no fractional years)
-plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
-
-# Remove grid lines
-plt.grid(False)
-
-# Ensure the y-axis starts from 0
-plt.ylim(0, None)  # None lets matplotlib automatically determine the upper limit
-
-# Access the current axis
-ax = plt.gca()
-
-# Remove the top and right spines (often associated with x2 and y2 axes)
-ax.spines['top'].set_visible(False)
-ax.spines['right'].set_visible(False)
-
-# Add titles and labels
-plt.title('Sales Over Time')
-plt.xlabel('Year')
-plt.ylabel('Sales')
-
-# Display grid and show the plot
-plt.show()
-```
-
-
-:::
-:::::
-
-
-
-::::: grid
-::: g-col-4
-```{r}
-ggplot( my_data , aes( year, sales, fill = dept) ) +
-geom_col( ) 
-```
-:::
-
-::: g-col-8
-```{python}
-# Create the bar plot
-plt.figure(figsize=(10, 6))
-sns.barplot(data=my_data, x='year', y='sales', hue='dept', dodge=False)
-
-# Add titles and labels
-plt.title('Sales by Year and Department')
-plt.xlabel('Year')
-plt.ylabel('Sales')
-
-# Place the legend outside to the right
-plt.legend(title='Department', loc='upper left', bbox_to_anchor=(1, 0.5))
-
-# Adjust layout for better spacing
-plt.tight_layout()
-
-# Show the plot
-plt.show()
-```
-
-
-:::
-:::::
-
-
 ## Transpose/Pivot
 
 
@@ -975,6 +805,302 @@ long_data = wide_data.melt(
 :::
 :::::
 
+## Creating functions to modify datasets
+
+
+::::: grid
+::: g-col-4
+```{text}
+%macro add_variable(dataset_name);
+data &dataset_name;
+set &dataset_name;
+new_variable = 1;
+run;
+%mend;
+
+%add_variable( my_data );
+```
+:::
+
+::: g-col-8
+```{python}
+def add_variable(dataset_name):
+  dataset_name['new_variable'] = 1 
+  return dataset_name
+
+my_data = add_variable(my_data)
+```
+
+
+:::
+:::::
+
+
+## File operations
+
+
+
+::::: grid
+::: g-col-4
+```{text}
+proc export data = my_data
+outfile = "my_file.csv" dbms = csv replace;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+my_data = pd.DataFrame(data)
+
+my_data.to_csv('my_file.csv', index=False)
+```
+
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{text}
+proc import datafile = "my_file.csv"
+out = my_data dbms = csv;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+my_data = pd.read_csv('my_file.csv')
+```
+
+
+:::
+:::::
+
+## Some plotting in R vs Python
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year , sales ) ) +
+geom_point( ) + geom_line( )
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the plot
+plt.figure(figsize=(8, 6))
+sns.lineplot(data=my_data, x='year', y='sales', marker='o', markersize=8)  # Line with points
+
+# Set the x-axis to display only integer values (no fractional years)
+plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# Remove grid lines
+plt.grid(False)
+
+# Access the current axis
+ax = plt.gca()
+
+# Remove the top and right spines (often associated with x2 and y2 axes)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Add titles and labels
+plt.title('Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Display grid and show the plot
+plt.show()
+```
+
+![](img/python_lineplot.png)
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year , sales ) ) +
+geom_point( ) + geom_line( ) + 
+ylim(0, 40) + 
+labs(x = "" , y = "Sales per year")
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the plot
+plt.figure(figsize=(8, 6))
+sns.lineplot(data=my_data, x='year', y='sales', marker='o', markersize=8)  # Line with points
+
+# Set the x-axis to display only integer values (no fractional years)
+plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# Remove grid lines
+plt.grid(False)
+
+# Ensure the y-axis starts from 0
+plt.ylim(0, None)  # None lets matplotlib automatically determine the upper limit
+
+# Access the current axis
+ax = plt.gca()
+
+# Remove the top and right spines (often associated with x2 and y2 axes)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Add titles and labels
+plt.title('Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Display grid and show the plot
+plt.show()
+```
+
+![](img/python_lineplot2.png)
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot(my_data, aes( year, sales, colour = dept) ) +
+geom_point( ) + geom_line( ) 
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the plot
+plt.figure(figsize=(8, 6))
+sns.lineplot(data=my_data, x='year', y='sales', hue='dept' ,marker='o', markersize=8)  # Line with points
+
+# Set the x-axis to display only integer values (no fractional years)
+plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# Remove grid lines
+plt.grid(False)
+
+# Ensure the y-axis starts from 0
+plt.ylim(0, None)  # None lets matplotlib automatically determine the upper limit
+
+# Access the current axis
+ax = plt.gca()
+
+# Remove the top and right spines (often associated with x2 and y2 axes)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Add titles and labels
+plt.title('Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Display grid and show the plot
+plt.show()
+```
+
+![](img/python_lineplot3.png)
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year, sales, fill = dept) ) +
+geom_col( ) 
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the bar plot
+plt.figure(figsize=(10, 6))
+sns.barplot(data=my_data, x='year', y='sales', hue='dept', dodge=False)
+
+# Add titles and labels
+plt.title('Sales by Year and Department')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Place the legend outside to the right
+plt.legend(title='Department', loc='upper left', bbox_to_anchor=(1, 0.5))
+
+# Adjust layout for better spacing
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+```
+
+![](img/python_lineplot4.png)
+:::
+:::::
+
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year, sales, fill = dept) ) +
+geom_col( position = "dodge" ) + coord_flip( )
+
+```
+:::
+
+::: g-col-8
+```{python}
+
+# Prepare data for horizontal dodged bars
+unique_years = sorted(my_data['year'].unique())
+
+departments = my_data['dept'].unique()
+
+bar_width = 0.35  # Width of each bar
+indices = np.arange(len(unique_years))  # Positions for the years
+
+# Create the figure and axes
+plt.figure(figsize=(10, 6))
+
+# Plot bars for each department
+for i, dept in enumerate(departments):
+    sales = my_data[my_data['dept'] == dept]['sales']
+    plt.barh(indices + i * bar_width, sales, bar_width, label=dept)
+
+# Add year labels to the y-axis
+plt.yticks(indices + bar_width / 2, unique_years)
+plt.xlabel('Sales', fontsize=12)
+plt.ylabel('Year', fontsize=12)
+plt.title('Sales by Year and Department', fontsize=14)
+
+# Add the legend to the right
+plt.legend(title='Department', loc='upper left', bbox_to_anchor=(1, 0.5))
+
+# Adjust layout for better spacing
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+```
+
+![](img/python_lineplot5.png)
+:::
+:::::
 
 
 
