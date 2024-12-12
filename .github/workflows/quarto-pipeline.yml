@@ -30,10 +30,3 @@ jobs:
     # Step 4: Render the Quarto document
     - name: Render Quarto Document
       run: quarto render sastopython.qmd # This will render all `.qmd` files in the repository
-
-    # Step 5: Publish to GitHub Pages (optional)
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: _site  # Adjust this if your output directory is different
