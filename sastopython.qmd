@@ -915,3 +915,66 @@ plt.show()
 :::::
 
 
+## Transpose/Pivot
+
+
+::::: grid
+::: g-col-4
+```{text}
+proc transpose data=long_data out=wide_data;
+by student ;
+id subject ;
+var grade ;
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+long_data = pd.DataFrame(data)
+wide_data = long_data.pivot(index='student', columns='subject', values='grade').reset_index()
+
+```
+
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{text}
+proc transpose data=wide_data
+out=long_data(rename=(col1=grade)) name=subject;
+by student ;
+var English Irish Maths;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+wide_data = pd.DataFrame(data)
+
+# Dynamically determine value_vars by excluding id_vars
+id_vars = ['student']  # Columns to keep
+value_vars = [col for col in wide_data.columns if col not in id_vars]  # Columns to melt
+
+# Melt the wide data into long format
+long_data = wide_data.melt(
+    id_vars=id_vars,
+    value_vars=value_vars,  # Dynamically determined
+    var_name='subject',
+    value_name='grade'
+)
+```
+
+
+:::
+:::::
+
+
+
+
