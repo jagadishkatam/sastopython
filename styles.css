@@ -1,11 +1,24 @@
-/* Adjust the sidebar width */
-.sidebar-toc {
-  width: 200px; /* Change the width of the sidebar (default is ~250px) */
+/* Adjust the TOC to occupy a fixed width (e.g., 250px) */
+#toc {
+    width: 250px;
+    float: left;
+    margin-right: 30px; /* Add some space between TOC and content */
 }
 
-/* Style the main content */
-body {
-  font-family: "Arial", sans-serif;
-  line-height: 1.6;
+/* Spread content to occupy the full width */
+#content {
+    margin-left: 270px; /* Create space for the TOC */
+    width: auto; /* Occupy the rest of the space */
+    padding: 00px;
 }
 
+/* Optional: Adjust the layout for smaller screens */
+@media (max-width: 768px) {
+    #toc {
+        width: 100%;
+        float: none;
+    }
+    #content {
+        margin-left: 0;
+    }
+}

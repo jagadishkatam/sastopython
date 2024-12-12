@@ -14,9 +14,11 @@ toc-location: left
 
 This guide aims to familiarise SAS users with Python. Python examples make use of pandas & numpy libraries.
 
-##### import pandas as pd
-
-##### import numpy as np
+###### import pandas as pd
+###### import numpy as np
+###### import matplotlib.pyplot as plt
+###### import seaborn as sns
+###### from matplotlib.ticker import MaxNLocator
 
 ## Datasets; drop, keep & rename variables
 
@@ -317,9 +319,599 @@ run;
 
 ::: g-col-8
 ```{python}
-count = old_data.groupby(["job_type", "region"]).size().reset_index(name="count")
-
-print(count)
+new_data = (
+    old_data.groupby(["job_type", "region"], as_index=False)
+    .agg(
+        total_salaries=("salary", "sum"),  # Sum of salaries
+        record_count=("salary", "count")  # Count of records
+    )
+)
 ```
 :::
 :::::
+
+## Sorting and Row-Wise Operations
+
+::::: grid
+::: g-col-4
+```{sas}
+proc sort data=old_data out=new_data;
+by id descending income ;
+run
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+new_data = old_data.sort_values(by=["id","income"], ascending=[True,False])
+```
+:::
+:::::
+
+
+::::: grid
+::: g-col-4
+```{sas}
+proc sort data=old_data nodup;
+by id job_type;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data.sort_values(by=["id","income"], ascending=[True,True])
+new_data = df.drop_duplicates(keep="first")
+```
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+proc sort data=old_data nodupkey;
+by id ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data = old_data.sort_values(by=["id"], ascending=[True])
+old_data.drop_duplicates(subset=["id"], keep="first")
+```
+:::
+:::::
+
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+by id descending income ;
+if first.id ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data = old_data.sort_values(by=["id", "income"], ascending=[True,False])
+
+# Approach 1
+new_data = old_data.drop_duplicates(subset=["id"], keep="first")
+
+# Approach 2
+new_data = old_data.groupby(["id"], as_index=False).first()
+```
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+prev_id= lag( id );
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["prev_id"] = old_data["id"].shift(1)
+new_data = old_data
+```
+:::
+:::::
+
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+by id;
+counter +1 ;
+if first.id then counter = 1;
+run;
+
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["counter"] = old_data.groupby("id").cumcount() + 1
+new_data = old_data
+```
+:::
+:::::
+
+
+## Converting and Rounding
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data ;
+text_var = put( 5 , 8. );
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["text_var"] = 5
+
+# Approach 1
+old_data["text_var"] = old_data["text_var"].astype(str)
+new_data = old_data
+```
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data ;
+num_var = input("5" , 8. );
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["num_var"] = "5"
+
+# Approach 1
+old_data["num_var"] = old_data["num_var"].astype(int)
+
+# Approach 2
+old_data["num_var"] = pd.to_numeric(old_data["num_var"])
+
+new_data = old_data
+```
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data ;
+nearest_5 = round( x , 5 );
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+
+old_data["nearest_5"] = old_data["x"].round(-1)
+new_data = old_data
+```
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data ;
+two_decimals = round( x , 0.01)
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+
+old_data["two_decimals"] = old_data["x"].round(2)
+new_data = old_data
+```
+:::
+:::::
+
+## Combining datasets
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data ;
+set data_1 data_2 ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+data_1 = pd.DataFrame(data1)
+data_2 = pd.DataFrame(data2)
+
+# Concatenate vertically (row-wise)
+new_data = pd.concat([data_1,data_2], axis=0, ignore_index=True)
+```
+
+**axis=0**: Stacks data row-wise (default). <br>
+**ignore_index=True**: Resets the index, creating a continuous index across the rows.
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data ;
+merge data_1 (in= in_1) data_2 ;
+by id ;
+if in_1 ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+data_1 = pd.DataFrame(data1)
+data_2 = pd.DataFrame(data2)
+
+new_data = pd.merge(data_1, data_2, on="id", how="left", indicator=True)
+```
+
+**indicator=True**: argument in pandas.merge() adds a special column called _merge to the resulting DataFrame. This column indicates the source of each row in the merged DataFrame. Possible Values in _merge Column `left_only`, `right_only`, `both`. <br>
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data ;
+merge data_1 (in= in_1) data_2 ;
+by id ;
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+data_1 = pd.DataFrame(data1)
+data_2 = pd.DataFrame(data2)
+
+new_data = pd.merge(data_1, data_2, on="id", how="outer", indicator=True)
+```
+
+a **full join** in python is accomplished by specifying `how="outer"` in the merge() function. <br>
+
+###### How to Use _merge for Filtering generated in the dataframe by indicator=True, assume that how='outer' is used
+
+```{python}
+data_1 = pd.DataFrame(data1)
+data_2 = pd.DataFrame(data2)
+
+# right join
+new_data = new_data[new_data['_merge'] == 'right_only'].drop(columns=['_merge'])
+
+# both
+new_data = new_data[new_data['_merge'] == 'both'].drop(columns=['_merge'])
+```
+
+:::
+:::::
+
+
+## String Manipulation
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+if find( job_title , "Health" );
+run
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+new_data = old_data[old_data["job_title"].str.contains("Health",case=False, na=False)]
+```
+
+- `case=False` parameter: case-insensitive search.
+- If you omit `na=False`, rows with NaN in job_title will raise an error.
+
+:::
+:::::
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+substring = substr( big_string , 3 , 4 ); 
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["substring"] = old_data["big_string"].str[2:6]
+new_data = old_data
+```
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+address = tranwrd( address , "Street" , "St" );
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["address"] = old_data["address"].str.replace("Street", "St",case=False, regex=False)
+new_data = old_data
+```
+
+- Set `regex=False` to ensure it treats the input as plain text, not a regular expression.
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{sas}
+data new_data;
+set old_data;
+house_number = compress( address , , "dk" );
+run;
+```
+:::
+
+::: g-col-8
+```{python}
+old_data = pd.DataFrame(data)
+old_data["house_number"] = old_data["address"].str.extract(r"(\d+)", expand=False)
+new_data = old_data
+```
+
+- `r"(\d+)"` In Python, prefixing a string with r (e.g., r"some_string") tells Python to treat the string as a raw string.This means that escape characters (like `\`) are treated literally and not as escape sequences. For example, `\n` would be interpreted as two characters `\` and `n`, rather than as a newline. <br>
+- `expand=False` ensures that the result is a single pandas Series.
+
+:::
+:::::
+
+## Some plotting in R vs Python
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year , sales ) ) +
+geom_point( ) + geom_line( )
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the plot
+plt.figure(figsize=(8, 6))
+sns.lineplot(data=my_data, x='year', y='sales', marker='o', markersize=8)  # Line with points
+
+# Set the x-axis to display only integer values (no fractional years)
+plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# Remove grid lines
+plt.grid(False)
+
+# Access the current axis
+ax = plt.gca()
+
+# Remove the top and right spines (often associated with x2 and y2 axes)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Add titles and labels
+plt.title('Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Display grid and show the plot
+plt.show()
+```
+
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year , sales ) ) +
+geom_point( ) + geom_line( ) + 
+ylim(0, 40) + 
+labs(x = "" , y = "Sales per year")
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the plot
+plt.figure(figsize=(8, 6))
+sns.lineplot(data=my_data, x='year', y='sales', marker='o', markersize=8)  # Line with points
+
+# Set the x-axis to display only integer values (no fractional years)
+plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# Remove grid lines
+plt.grid(False)
+
+# Ensure the y-axis starts from 0
+plt.ylim(0, None)  # None lets matplotlib automatically determine the upper limit
+
+# Access the current axis
+ax = plt.gca()
+
+# Remove the top and right spines (often associated with x2 and y2 axes)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Add titles and labels
+plt.title('Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Display grid and show the plot
+plt.show()
+```
+
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot(my_data, aes( year, sales, colour = dept) ) +
+geom_point( ) + geom_line( ) 
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the plot
+plt.figure(figsize=(8, 6))
+sns.lineplot(data=my_data, x='year', y='sales', hue='dept' ,marker='o', markersize=8)  # Line with points
+
+# Set the x-axis to display only integer values (no fractional years)
+plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# Remove grid lines
+plt.grid(False)
+
+# Ensure the y-axis starts from 0
+plt.ylim(0, None)  # None lets matplotlib automatically determine the upper limit
+
+# Access the current axis
+ax = plt.gca()
+
+# Remove the top and right spines (often associated with x2 and y2 axes)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Add titles and labels
+plt.title('Sales Over Time')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Display grid and show the plot
+plt.show()
+```
+
+
+:::
+:::::
+
+
+
+::::: grid
+::: g-col-4
+```{r}
+ggplot( my_data , aes( year, sales, fill = dept) ) +
+geom_col( ) 
+```
+:::
+
+::: g-col-8
+```{python}
+# Create the bar plot
+plt.figure(figsize=(10, 6))
+sns.barplot(data=my_data, x='year', y='sales', hue='dept', dodge=False)
+
+# Add titles and labels
+plt.title('Sales by Year and Department')
+plt.xlabel('Year')
+plt.ylabel('Sales')
+
+# Place the legend outside to the right
+plt.legend(title='Department', loc='upper left', bbox_to_anchor=(1, 0.5))
+
+# Adjust layout for better spacing
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+```
+
+
+:::
+:::::
+
+

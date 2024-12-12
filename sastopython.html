@@ -86,6 +86,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#conditional-filtering" id="toc-conditional-filtering" class="nav-link" data-scroll-target="#conditional-filtering">Conditional filtering</a></li>
   <li><a href="#new-variables-conditional-editing" id="toc-new-variables-conditional-editing" class="nav-link" data-scroll-target="#new-variables-conditional-editing">New variables, conditional editing</a></li>
   <li><a href="#counting-and-summarising" id="toc-counting-and-summarising" class="nav-link" data-scroll-target="#counting-and-summarising">Counting and Summarising</a></li>
+  <li><a href="#sorting-and-row-wise-operations" id="toc-sorting-and-row-wise-operations" class="nav-link" data-scroll-target="#sorting-and-row-wise-operations">Sorting and Row-Wise Operations</a></li>
+  <li><a href="#converting-and-rounding" id="toc-converting-and-rounding" class="nav-link" data-scroll-target="#converting-and-rounding">Converting and Rounding</a></li>
+  <li><a href="#combining-datasets" id="toc-combining-datasets" class="nav-link" data-scroll-target="#combining-datasets">Combining datasets</a></li>
+  <li><a href="#string-manipulation" id="toc-string-manipulation" class="nav-link" data-scroll-target="#string-manipulation">String Manipulation</a></li>
+  <li><a href="#some-plotting-in-r-vs-python" id="toc-some-plotting-in-r-vs-python" class="nav-link" data-scroll-target="#some-plotting-in-r-vs-python">Some plotting in R vs Python</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -116,22 +121,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>This guide aims to familiarise SAS users with Python. Python examples make use of pandas &amp; numpy libraries.</p>
-<section id="import-pandas-as-pd" class="level5">
-<h5 class="anchored" data-anchor-id="import-pandas-as-pd">import pandas as pd</h5>
+<section id="import-pandas-as-pd" class="level6">
+<h6 class="anchored" data-anchor-id="import-pandas-as-pd">import pandas as pd</h6>
 </section>
-<section id="import-numpy-as-np" class="level5">
-<h5 class="anchored" data-anchor-id="import-numpy-as-np">import numpy as np</h5>
+<section id="import-numpy-as-np" class="level6">
+<h6 class="anchored" data-anchor-id="import-numpy-as-np">import numpy as np</h6>
+</section>
+<section id="import-matplotlib.pyplot-as-plt" class="level6">
+<h6 class="anchored" data-anchor-id="import-matplotlib.pyplot-as-plt">import matplotlib.pyplot as plt</h6>
+</section>
+<section id="import-seaborn-as-sns" class="level6">
+<h6 class="anchored" data-anchor-id="import-seaborn-as-sns">import seaborn as sns</h6>
+</section>
+<section id="from-matplotlib.ticker-import-maxnlocator" class="level6">
+<h6 class="anchored" data-anchor-id="from-matplotlib.ticker-import-maxnlocator">from matplotlib.ticker import MaxNLocator</h6>
 </section>
 <section id="datasets-drop-keep-rename-variables" class="level2">
 <h2 class="anchored" data-anchor-id="datasets-drop-keep-rename-variables">Datasets; drop, keep &amp; rename variables</h2>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 run;</code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="88a5698d" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -139,12 +155,14 @@ run;</code></pre>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data (keep=id);
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data (keep=id);
 set old_data (drop=job_title) ;
 run;</code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="e0239b18" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.drop(columns<span class="op">=</span>[<span class="st">'job_title'</span>])</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># keep column 'id'</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data[[<span class="st">'id'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -153,27 +171,31 @@ run;</code></pre>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data (drop= temp: );
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data (drop= temp: );
 set old_data;
 run;
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="321844bf" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.drop(columns<span class="op">=</span>[col <span class="cf">for</span> col <span class="kw">in</span> old_data.columns <span class="cf">if</span> col.startswith(<span class="st">"temp"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 rename old_name = new_name;
 run;
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="a1523d25" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.rename(columns<span class="op">=</span>{<span class="st">"old_name"</span>: <span class="st">"new_name"</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -183,57 +205,64 @@ run;
 <h2 class="anchored" data-anchor-id="conditional-filtering">Conditional filtering</h2>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 if Sex = "M";
 run;
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="e7a78f3c" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data[old_data[<span class="st">"Sex"</span>] <span class="op">==</span> <span class="st">"M"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 if year in (2010,2011,2012);
 run;
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="3f4ece02" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data[old_data[<span class="st">"year"</span>].isin([<span class="dv">2010</span>,<span class="dv">2011</span>,<span class="dv">2012</span>])]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 by id ;
 if first.id ;
 run;
-
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="dd83d78d" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.groupby(<span class="st">"id"</span>).head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 if dob &gt; "25APR1990"d;
 run;</code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="f31ab267" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert 'date_of_birth' to datetime format</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"dob"</span>] <span class="op">=</span> pd.to_datetime(old_data[<span class="st">"dob"</span>])</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter by a specific date (e.g., born after 1990-04-25)</span></span>
@@ -246,13 +275,15 @@ run;</code></pre>
 <h2 class="anchored" data-anchor-id="new-variables-conditional-editing">New variables, conditional editing</h2>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 total_income = wages + benefits ;
 run;</code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="367a880d" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 1</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"total_income"</span>] <span class="op">=</span> old_data[<span class="st">"wages"</span>] <span class="op">+</span> old_data[<span class="st">"benefits"</span>]</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span>
@@ -268,15 +299,17 @@ run;</code></pre>
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 if hours &gt; 30 then full_time = "Y";
 else full_time = "N";
 run;
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="9e8792bf" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 1</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"full_time"</span>] <span class="op">=</span> old_data[<span class="st">"hours"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="st">'Y'</span> <span class="cf">if</span> x <span class="op">&gt;</span> <span class="dv">30</span> <span class="cf">else</span> <span class="st">'N'</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span>
@@ -289,7 +322,8 @@ run;
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>data new_data;
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
 set old_data;
 if temp &gt; 20 then weather = "Warm";
 else if temp &gt; 10 then weather = "Mild";
@@ -297,8 +331,9 @@ else weather = "Cold";
 run;
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="b79e1db2" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to implement if-elif-else logic</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_merit(x):</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x <span class="op">&gt;</span> <span class="dv">20</span>:</span>
@@ -323,14 +358,15 @@ run;
 <h2 class="anchored" data-anchor-id="counting-and-summarising">Counting and Summarising</h2>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>proc freq data = old_data ;
+<div class="cell">
+<pre class="sas cell-code"><code>proc freq data = old_data ;
 table job_type ;
 run;
-
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="660cd0e8" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> old_data[<span class="st">'job_type'</span>].value_counts()</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -339,14 +375,15 @@ run;
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>proc freq data = old_data ;
+<div class="cell">
+<pre class="sas cell-code"><code>proc freq data = old_data ;
 table job_type*region ;
 run;
-
 </code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="56af7d97" class="cell">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> old_data.groupby([<span class="st">"job_type"</span>, <span class="st">"region"</span>]).size().reset_index(name<span class="op">=</span><span class="st">"count"</span>)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -355,18 +392,521 @@ run;
 </div>
 <div class="grid">
 <div class="g-col-4">
-<pre class="{sas}"><code>proc summary data = old_data nway ;
+<div class="cell">
+<pre class="sas cell-code"><code>proc summary data = old_data nway ;
 class job_type region ;
 var salary ;
 output out = new_data
 sum( salary ) = total_salaries ;
 run;</code></pre>
 </div>
+</div>
 <div class="g-col-8">
-<div id="b19af124" class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> old_data.groupby([<span class="st">"job_type"</span>, <span class="st">"region"</span>]).size().reset_index(name<span class="op">=</span><span class="st">"count"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> (</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    old_data.groupby([<span class="st">"job_type"</span>, <span class="st">"region"</span>], as_index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        total_salaries<span class="op">=</span>(<span class="st">"salary"</span>, <span class="st">"sum"</span>),  <span class="co"># Sum of salaries</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        record_count<span class="op">=</span>(<span class="st">"salary"</span>, <span class="st">"count"</span>)  <span class="co"># Count of records</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sorting-and-row-wise-operations" class="level2">
+<h2 class="anchored" data-anchor-id="sorting-and-row-wise-operations">Sorting and Row-Wise Operations</h2>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>proc sort data=old_data out=new_data;
+by id descending income ;
+run</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.sort_values(by<span class="op">=</span>[<span class="st">"id"</span>,<span class="st">"income"</span>], ascending<span class="op">=</span>[<span class="va">True</span>,<span class="va">False</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>proc sort data=old_data nodup;
+by id job_type;
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>old_data.sort_values(by<span class="op">=</span>[<span class="st">"id"</span>,<span class="st">"income"</span>], ascending<span class="op">=</span>[<span class="va">True</span>,<span class="va">True</span>])</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> df.drop_duplicates(keep<span class="op">=</span><span class="st">"first"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>proc sort data=old_data nodupkey;
+by id ;
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> old_data.sort_values(by<span class="op">=</span>[<span class="st">"id"</span>], ascending<span class="op">=</span>[<span class="va">True</span>])</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>old_data.drop_duplicates(subset<span class="op">=</span>[<span class="st">"id"</span>], keep<span class="op">=</span><span class="st">"first"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+by id descending income ;
+if first.id ;
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> old_data.sort_values(by<span class="op">=</span>[<span class="st">"id"</span>, <span class="st">"income"</span>], ascending<span class="op">=</span>[<span class="va">True</span>,<span class="va">False</span>])</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 1</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.drop_duplicates(subset<span class="op">=</span>[<span class="st">"id"</span>], keep<span class="op">=</span><span class="st">"first"</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 2</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data.groupby([<span class="st">"id"</span>], as_index<span class="op">=</span><span class="va">False</span>).first()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+prev_id= lag( id );
+run;
+</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"prev_id"</span>] <span class="op">=</span> old_data[<span class="st">"id"</span>].shift(<span class="dv">1</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+by id;
+counter +1 ;
+if first.id then counter = 1;
+run;
+</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"counter"</span>] <span class="op">=</span> old_data.groupby(<span class="st">"id"</span>).cumcount() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="converting-and-rounding" class="level2">
+<h2 class="anchored" data-anchor-id="converting-and-rounding">Converting and Rounding</h2>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data ;
+text_var = put( 5 , 8. );
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"text_var"</span>] <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 1</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"text_var"</span>] <span class="op">=</span> old_data[<span class="st">"text_var"</span>].astype(<span class="bu">str</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data ;
+num_var = input("5" , 8. );
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"num_var"</span>] <span class="op">=</span> <span class="st">"5"</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 1</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"num_var"</span>] <span class="op">=</span> old_data[<span class="st">"num_var"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Approach 2</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"num_var"</span>] <span class="op">=</span> pd.to_numeric(old_data[<span class="st">"num_var"</span>])</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data ;
+nearest_5 = round( x , 5 );
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"nearest_5"</span>] <span class="op">=</span> old_data[<span class="st">"x"</span>].<span class="bu">round</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data ;
+two_decimals = round( x , 0.01)
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"two_decimals"</span>] <span class="op">=</span> old_data[<span class="st">"x"</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="combining-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="combining-datasets">Combining datasets</h2>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data ;
+set data_1 data_2 ;
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="op">=</span> pd.DataFrame(data1)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>data_2 <span class="op">=</span> pd.DataFrame(data2)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate vertically (row-wise)</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.concat([data_1,data_2], axis<span class="op">=</span><span class="dv">0</span>, ignore_index<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>axis=0</strong>: Stacks data row-wise (default). <br> <strong>ignore_index=True</strong>: Resets the index, creating a continuous index across the rows.</p>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data ;
+merge data_1 (in= in_1) data_2 ;
+by id ;
+if in_1 ;
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="op">=</span> pd.DataFrame(data1)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>data_2 <span class="op">=</span> pd.DataFrame(data2)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.merge(data_1, data_2, on<span class="op">=</span><span class="st">"id"</span>, how<span class="op">=</span><span class="st">"left"</span>, indicator<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>indicator=True</strong>: argument in pandas.merge() adds a special column called _merge to the resulting DataFrame. This column indicates the source of each row in the merged DataFrame. Possible Values in _merge Column <code>left_only</code>, <code>right_only</code>, <code>both</code>. <br></p>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data ;
+merge data_1 (in= in_1) data_2 ;
+by id ;
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="op">=</span> pd.DataFrame(data1)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>data_2 <span class="op">=</span> pd.DataFrame(data2)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.merge(data_1, data_2, on<span class="op">=</span><span class="st">"id"</span>, how<span class="op">=</span><span class="st">"outer"</span>, indicator<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>a <strong>full join</strong> in python is accomplished by specifying <code>how="outer"</code> in the merge() function. <br></p>
+<section id="how-to-use-_merge-for-filtering-generated-in-the-dataframe-by-indicatortrue-assume-that-howouter-is-used" class="level6">
+<h6 class="anchored" data-anchor-id="how-to-use-_merge-for-filtering-generated-in-the-dataframe-by-indicatortrue-assume-that-howouter-is-used">How to Use _merge for Filtering generated in the dataframe by indicator=True, assume that how=‘outer’ is used</h6>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>data_1 <span class="op">=</span> pd.DataFrame(data1)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>data_2 <span class="op">=</span> pd.DataFrame(data2)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># right join</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> new_data[new_data[<span class="st">'_merge'</span>] <span class="op">==</span> <span class="st">'right_only'</span>].drop(columns<span class="op">=</span>[<span class="st">'_merge'</span>])</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co"># both</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> new_data[new_data[<span class="st">'_merge'</span>] <span class="op">==</span> <span class="st">'both'</span>].drop(columns<span class="op">=</span>[<span class="st">'_merge'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="string-manipulation" class="level2">
+<h2 class="anchored" data-anchor-id="string-manipulation">String Manipulation</h2>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+if find( job_title , "Health" );
+run</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data[old_data[<span class="st">"job_title"</span>].<span class="bu">str</span>.contains(<span class="st">"Health"</span>,case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><code>case=False</code> parameter: case-insensitive search.</li>
+<li>If you omit <code>na=False</code>, rows with NaN in job_title will raise an error.</li>
+</ul>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+substring = substr( big_string , 3 , 4 ); 
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"substring"</span>] <span class="op">=</span> old_data[<span class="st">"big_string"</span>].<span class="bu">str</span>[<span class="dv">2</span>:<span class="dv">6</span>]</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+address = tranwrd( address , "Street" , "St" );
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"address"</span>] <span class="op">=</span> old_data[<span class="st">"address"</span>].<span class="bu">str</span>.replace(<span class="st">"Street"</span>, <span class="st">"St"</span>,case<span class="op">=</span><span class="va">False</span>, regex<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Set <code>regex=False</code> to ensure it treats the input as plain text, not a regular expression.</li>
+</ul>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<pre class="sas cell-code"><code>data new_data;
+set old_data;
+house_number = compress( address , , "dk" );
+run;</code></pre>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>old_data <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>old_data[<span class="st">"house_number"</span>] <span class="op">=</span> old_data[<span class="st">"address"</span>].<span class="bu">str</span>.extract(<span class="vs">r"(\d+)"</span>, expand<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> old_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><code>r"(\d+)"</code> In Python, prefixing a string with r (e.g., r”some_string”) tells Python to treat the string as a raw string.This means that escape characters (like <code>\</code>) are treated literally and not as escape sequences. For example, <code>\n</code> would be interpreted as two characters <code>\</code> and <code>n</code>, rather than as a newline. <br></li>
+<li><code>expand=False</code> ensures that the result is a single pandas Series.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="some-plotting-in-r-vs-python" class="level2">
+<h2 class="anchored" data-anchor-id="some-plotting-in-r-vs-python">Some plotting in R vs Python</h2>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>( my_data , <span class="fu">aes</span>( year , sales ) ) <span class="sc">+</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>( ) <span class="sc">+</span> <span class="fu">geom_line</span>( )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>my_data, x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'sales'</span>, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">8</span>)  <span class="co"># Line with points</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the x-axis to display only integer values (no fractional years)</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>plt.gca().xaxis.set_major_locator(MaxNLocator(integer<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove grid lines</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">False</span>)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the current axis</span></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the top and right spines (often associated with x2 and y2 axes)</span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Add titles and labels</span></span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Sales Over Time'</span>)</span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Sales'</span>)</span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Display grid and show the plot</span></span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>( my_data , <span class="fu">aes</span>( year , sales ) ) <span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>( ) <span class="sc">+</span> <span class="fu">geom_line</span>( ) <span class="sc">+</span> </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">40</span>) <span class="sc">+</span> </span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span> , <span class="at">y =</span> <span class="st">"Sales per year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>my_data, x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'sales'</span>, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">8</span>)  <span class="co"># Line with points</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the x-axis to display only integer values (no fractional years)</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>plt.gca().xaxis.set_major_locator(MaxNLocator(integer<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove grid lines</span></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">False</span>)</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure the y-axis starts from 0</span></span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="va">None</span>)  <span class="co"># None lets matplotlib automatically determine the upper limit</span></span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the current axis</span></span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the top and right spines (often associated with x2 and y2 axes)</span></span>
+<span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb67-19"><a href="#cb67-19" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-21"><a href="#cb67-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Add titles and labels</span></span>
+<span id="cb67-22"><a href="#cb67-22" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Sales Over Time'</span>)</span>
+<span id="cb67-23"><a href="#cb67-23" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb67-24"><a href="#cb67-24" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Sales'</span>)</span>
+<span id="cb67-25"><a href="#cb67-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-26"><a href="#cb67-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Display grid and show the plot</span></span>
+<span id="cb67-27"><a href="#cb67-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(my_data, <span class="fu">aes</span>( year, sales, <span class="at">colour =</span> dept) ) <span class="sc">+</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>( ) <span class="sc">+</span> <span class="fu">geom_line</span>( ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>my_data, x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'sales'</span>, hue<span class="op">=</span><span class="st">'dept'</span> ,marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">8</span>)  <span class="co"># Line with points</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the x-axis to display only integer values (no fractional years)</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>plt.gca().xaxis.set_major_locator(MaxNLocator(integer<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove grid lines</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">False</span>)</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure the y-axis starts from 0</span></span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="va">None</span>)  <span class="co"># None lets matplotlib automatically determine the upper limit</span></span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the current axis</span></span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-17"><a href="#cb69-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the top and right spines (often associated with x2 and y2 axes)</span></span>
+<span id="cb69-18"><a href="#cb69-18" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb69-19"><a href="#cb69-19" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb69-20"><a href="#cb69-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-21"><a href="#cb69-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Add titles and labels</span></span>
+<span id="cb69-22"><a href="#cb69-22" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Sales Over Time'</span>)</span>
+<span id="cb69-23"><a href="#cb69-23" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb69-24"><a href="#cb69-24" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Sales'</span>)</span>
+<span id="cb69-25"><a href="#cb69-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-26"><a href="#cb69-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Display grid and show the plot</span></span>
+<span id="cb69-27"><a href="#cb69-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>( my_data , <span class="fu">aes</span>( year, sales, <span class="at">fill =</span> dept) ) <span class="sc">+</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_col</span>( ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the bar plot</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>my_data, x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'sales'</span>, hue<span class="op">=</span><span class="st">'dept'</span>, dodge<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add titles and labels</span></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Sales by Year and Department'</span>)</span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Sales'</span>)</span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Place the legend outside to the right</span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Department'</span>, loc<span class="op">=</span><span class="st">'upper left'</span>, bbox_to_anchor<span class="op">=</span>(<span class="dv">1</span>, <span class="fl">0.5</span>))</span>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust layout for better spacing</span></span>
+<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb71-15"><a href="#cb71-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-16"><a href="#cb71-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb71-17"><a href="#cb71-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
