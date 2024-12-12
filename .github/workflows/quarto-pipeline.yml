@@ -26,6 +26,7 @@ jobs:
     - name: Install R packages
       run: |
         Rscript -e 'install.packages("rmarkdown")'
+        Rscript -e 'install.packages("reticulate")'
     # Step 4: Render the Quarto document
     - name: Render Quarto Document
       run: quarto render sastopython.qmd # This will render all `.qmd` files in the repository
