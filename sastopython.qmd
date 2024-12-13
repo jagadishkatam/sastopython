@@ -3,11 +3,14 @@ title: "SAS <-> Python :: CHEAT SHEET"
 format:
   html:
     css: styles.css
+    toc: true
+    toc-location: left
+    grid:
+      margin-width: 0px
+      body-width: 1100px
 editor: visual
 execute:
   enabled: false
-toc: true
-toc-location: left
 ---
 
 # Introduction
@@ -22,7 +25,6 @@ This guide aims to familiarise SAS users with Python. Python examples make use o
 
 ## Datasets; drop, keep & rename variables
 
-::: {.column-page-right}
 
 ::::: grid
 ::: g-col-4
@@ -96,14 +98,7 @@ new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
 :::
 :::::
 
-:::
-
-
-
 ## Conditional filtering
-
-::: {.column-page-right}
-
 
 ::::: grid
 ::: g-col-4
@@ -181,11 +176,11 @@ new_data = old_data[old_data["dob"] > "1990-04-25"]
 :::
 :::::
 
-:::
+
 
 ## New variables, conditional editing
 
-::: {.column-page-right}
+
 
 ::::: grid
 ::: g-col-4
@@ -275,11 +270,11 @@ new_data = old_data
 :::
 :::::
 
-:::
+
 
 ## Counting and Summarising
 
-::: {.column-page-right}
+
 
 ::::: grid
 ::: g-col-4
@@ -349,11 +344,10 @@ new_data = (
 :::
 :::::
 
-:::
 
 ## Sorting and Row-Wise Operations
 
-::: {.column-page-right}
+
 
 ::::: grid
 ::: g-col-4
@@ -486,11 +480,10 @@ new_data = old_data
 :::
 :::::
 
-:::
 
 ## Converting and Rounding
 
-::: {.column-page-right}
+
 
 
 ::::: grid
@@ -587,11 +580,9 @@ new_data = old_data
 :::
 :::::
 
-:::
-
 ## Combining datasets
 
-::: {.column-page-right}
+
 
 
 ::::: grid
@@ -681,11 +672,9 @@ new_data = new_data[new_data['_merge'] == 'both'].drop(columns=['_merge'])
 :::
 :::::
 
-:::
-
 ## String Manipulation
 
-::: {.column-page-right}
+
 
 
 
@@ -781,11 +770,9 @@ new_data = old_data
 :::
 :::::
 
-:::
-
 ## Transpose/Pivot
 
-::: {.column-page-right}
+
 
 
 
@@ -846,11 +833,9 @@ long_data = wide_data.melt(
 :::
 :::::
 
-:::
-
 ## Creating functions to modify datasets
 
-::: {.column-page-right}
+
 
 
 ::::: grid
@@ -879,11 +864,10 @@ my_data = add_variable(my_data)
 
 :::
 :::::
-:::
 
 ## File operations
 
-::: {.column-page-right}
+
 
 
 ::::: grid
@@ -926,11 +910,10 @@ my_data = pd.read_csv('my_file.csv')
 :::
 :::::
 
-:::
 
 ## Some plotting in R vs Python
 
-::: {.column-page-right}
+
 
 
 ::::: grid
@@ -1152,6 +1135,4 @@ plt.show()
 ![](img/python_lineplot5.png)
 :::
 :::::
-
-:::
 
