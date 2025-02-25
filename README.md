@@ -22,7 +22,7 @@ make use of pandas, numpy, matplotlib & seaborn libraries.
 
 <div class="g-col-4">
 
-# SAS
+##### SAS
 
 ``` sas
 
@@ -36,7 +36,7 @@ run;
 
 <div class="g-col-8">
 
-# python
+##### python
 
 ``` python
 old_data = pd.DataFrame(data)
