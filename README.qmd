@@ -24,7 +24,7 @@ This guide aims to familiarise SAS users with Python. Python examples make use o
 ::::: grid
 ::: g-col-4
 
-##### SAS
+###### SAS
 
 ```{sas }
 
@@ -37,7 +37,7 @@ run;
 
 ::: g-col-8
 
-##### python
+###### python
 
 ```{python }
 
@@ -50,7 +50,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data (keep=id);
 set old_data (drop=job_title) ;
@@ -59,6 +59,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = old_data.drop(columns=['job_title'])
 # keep column 'id'
@@ -69,7 +70,7 @@ new_data = old_data[['id']]
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data (drop= temp: );
 set old_data;
@@ -79,6 +80,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = old_data.drop(columns=[col for col in old_data.columns if col.startswith("temp")])
 ```
@@ -87,7 +89,7 @@ new_data = old_data.drop(columns=[col for col in old_data.columns if col.startsw
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -98,6 +100,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
 ```
@@ -108,7 +111,7 @@ new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -119,6 +122,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = old_data[old_data["Sex"] == "M"]
 ```
@@ -127,7 +131,7 @@ new_data = old_data[old_data["Sex"] == "M"]
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -138,6 +142,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = old_data[old_data["year"].isin([2010,2011,2012])]
 ```
@@ -146,7 +151,7 @@ new_data = old_data[old_data["year"].isin([2010,2011,2012])]
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -159,6 +164,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = old_data.groupby("id").head(1)
 ```
@@ -167,7 +173,7 @@ new_data = old_data.groupby("id").head(1)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -177,7 +183,7 @@ run;
 :::
 
 ::: g-col-8
-
+###### python
 ```{python}
 # Convert 'date_of_birth' to datetime format
 old_data["dob"] = pd.to_datetime(old_data["dob"])
@@ -191,7 +197,7 @@ new_data = old_data[old_data["dob"] > "1990-04-25"]
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -201,6 +207,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Approach 1
 old_data["total_income"] = old_data["wages"] + old_data["benefits"]
@@ -219,7 +226,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -231,6 +238,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Approach 1
 old_data["full_time"] = old_data["hours"].apply(lambda x: 'Y' if x > 30 else 'N')
@@ -246,7 +254,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -259,6 +267,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Define a function to implement if-elif-else logic
 def calculate_merit(x):
@@ -284,7 +293,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc freq data = old_data ;
 table job_type ;
@@ -295,6 +304,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 count = old_data['job_type'].value_counts()
 
@@ -305,7 +315,7 @@ print(count)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc freq data = old_data ;
 table job_type*region ;
@@ -316,6 +326,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 count = old_data.groupby(["job_type", "region"]).size().reset_index(name="count")
 
@@ -326,7 +337,7 @@ print(count)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc summary data = old_data nway ;
 class job_type region ;
@@ -338,6 +349,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 new_data = (
     old_data.groupby(["job_type", "region"], as_index=False)
@@ -354,7 +366,7 @@ new_data = (
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc sort data=old_data out=new_data;
 by id descending income ;
@@ -363,6 +375,7 @@ run
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 new_data = old_data.sort_values(by=["id","income"], ascending=[True,False])
@@ -372,7 +385,7 @@ new_data = old_data.sort_values(by=["id","income"], ascending=[True,False])
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc sort data=old_data nodup;
 by id job_type;
@@ -381,6 +394,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data.sort_values(by=["id","income"], ascending=[True,True])
@@ -391,7 +405,7 @@ new_data = df.drop_duplicates(keep="first")
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc sort data=old_data nodupkey;
 by id ;
@@ -400,6 +414,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data = old_data.sort_values(by=["id"], ascending=[True])
@@ -410,7 +425,7 @@ old_data.drop_duplicates(subset=["id"], keep="first")
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -421,6 +436,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data = old_data.sort_values(by=["id", "income"], ascending=[True,False])
@@ -436,7 +452,7 @@ new_data = old_data.groupby(["id"], as_index=False).first()
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -447,6 +463,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["prev_id"] = old_data["id"].shift(1)
@@ -457,7 +474,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -470,6 +487,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["counter"] = old_data.groupby("id").cumcount() + 1
@@ -482,7 +500,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data ;
@@ -492,6 +510,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["text_var"] = 5
@@ -505,7 +524,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data ;
@@ -515,6 +534,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["num_var"] = "5"
@@ -532,7 +552,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data ;
@@ -542,6 +562,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 
@@ -553,7 +574,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data ;
@@ -563,6 +584,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 
@@ -576,7 +598,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data ;
 set data_1 data_2 ;
@@ -585,6 +607,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 data_1 = pd.DataFrame(data1)
 data_2 = pd.DataFrame(data2)
@@ -599,7 +622,7 @@ new_data = pd.concat([data_1,data_2], axis=0, ignore_index=True)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data ;
 merge data_1 (in= in_1) data_2 ;
@@ -610,6 +633,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 data_1 = pd.DataFrame(data1)
 data_2 = pd.DataFrame(data2)
@@ -623,7 +647,7 @@ new_data = pd.merge(data_1, data_2, on="id", how="left", indicator=True)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data ;
 merge data_1 (in= in_1) data_2 ;
@@ -633,6 +657,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 data_1 = pd.DataFrame(data1)
 data_2 = pd.DataFrame(data2)
@@ -661,7 +686,7 @@ new_data = new_data[new_data['_merge'] == 'both'].drop(columns=['_merge'])
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -671,6 +696,7 @@ run
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 new_data = old_data[old_data["job_title"].str.contains("Health",case=False, na=False)]
@@ -683,7 +709,7 @@ new_data = old_data[old_data["job_title"].str.contains("Health",case=False, na=F
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -693,6 +719,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["substring"] = old_data["big_string"].str[2:6]
@@ -703,7 +730,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -713,6 +740,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["address"] = old_data["address"].str.replace("Street", "St",case=False, regex=False)
@@ -725,7 +753,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 data new_data;
 set old_data;
@@ -735,6 +763,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 old_data = pd.DataFrame(data)
 old_data["house_number"] = old_data["address"].str.extract(r"(\d+)", expand=False)
@@ -750,7 +779,7 @@ new_data = old_data
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc transpose data=long_data out=wide_data;
 by student ;
@@ -762,6 +791,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 long_data = pd.DataFrame(data)
 wide_data = long_data.pivot(index='student', columns='subject', values='grade').reset_index()
@@ -772,7 +802,7 @@ wide_data = long_data.pivot(index='student', columns='subject', values='grade').
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc transpose data=wide_data
 out=long_data(rename=(col1=grade)) name=subject;
@@ -783,6 +813,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 wide_data = pd.DataFrame(data)
 
@@ -805,7 +836,7 @@ long_data = wide_data.melt(
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 %macro add_variable(dataset_name);
 data &dataset_name;
@@ -819,6 +850,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 def add_variable(dataset_name):
   dataset_name['new_variable'] = 1 
@@ -833,7 +865,7 @@ my_data = add_variable(my_data)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc export data = my_data
 outfile = "my_file.csv" dbms = csv replace;
@@ -842,6 +874,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 my_data = pd.DataFrame(data)
 
@@ -852,7 +885,7 @@ my_data.to_csv('my_file.csv', index=False)
 
 ::::: grid
 ::: g-col-4
-##### SAS
+###### SAS
 ```{sas}
 proc import datafile = "my_file.csv"
 out = my_data dbms = csv;
@@ -861,6 +894,7 @@ run;
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 my_data = pd.read_csv('my_file.csv')
 ```
@@ -878,6 +912,7 @@ geom_point( ) + geom_line( )
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Create the plot
 plt.figure(figsize=(8, 6))
@@ -920,6 +955,7 @@ labs(x = "" , y = "Sales per year")
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Create the plot
 plt.figure(figsize=(8, 6))
@@ -956,6 +992,7 @@ plt.show()
 
 ::::: grid
 ::: g-col-4
+
 ```{r}
 ggplot(my_data, aes( year, sales, colour = dept) ) +
 geom_point( ) + geom_line( ) 
@@ -963,6 +1000,7 @@ geom_point( ) + geom_line( )
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Create the plot
 plt.figure(figsize=(8, 6))
@@ -1006,6 +1044,7 @@ geom_col( )
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 # Create the bar plot
 plt.figure(figsize=(10, 6))
@@ -1040,6 +1079,7 @@ geom_col( position = "dodge" ) + coord_flip( )
 :::
 
 ::: g-col-8
+###### python
 ```{python}
 
 # Prepare data for horizontal dodged bars

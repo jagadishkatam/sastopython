@@ -22,7 +22,7 @@ make use of pandas, numpy, matplotlib & seaborn libraries.
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 
@@ -36,7 +36,7 @@ run;
 
 <div class="g-col-8">
 
-##### python
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -51,7 +51,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data (keep=id);
@@ -62,6 +62,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 new_data = old_data.drop(columns=['job_title'])
@@ -77,7 +79,7 @@ new_data = old_data[['id']]
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data (drop= temp: );
@@ -88,6 +90,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 new_data = old_data.drop(columns=[col for col in old_data.columns if col.startswith("temp")])
@@ -101,7 +105,7 @@ new_data = old_data.drop(columns=[col for col in old_data.columns if col.startsw
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -113,6 +117,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
@@ -128,7 +134,7 @@ new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -140,6 +146,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 new_data = old_data[old_data["Sex"] == "M"]
@@ -153,7 +161,7 @@ new_data = old_data[old_data["Sex"] == "M"]
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -165,6 +173,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 new_data = old_data[old_data["year"].isin([2010,2011,2012])]
@@ -178,7 +188,7 @@ new_data = old_data[old_data["year"].isin([2010,2011,2012])]
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -192,6 +202,8 @@ run;
 
 <div class="g-col-8">
 
+###### python
+
 ``` python
 new_data = old_data.groupby("id").head(1)
 ```
@@ -204,7 +216,7 @@ new_data = old_data.groupby("id").head(1)
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -216,6 +228,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Convert 'date_of_birth' to datetime format
@@ -234,7 +248,7 @@ new_data = old_data[old_data["dob"] > "1990-04-25"]
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -246,6 +260,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Approach 1
@@ -268,7 +284,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -281,6 +297,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Approach 1
@@ -300,7 +318,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -314,6 +332,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Define a function to implement if-elif-else logic
@@ -344,7 +364,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc freq data = old_data ;
@@ -355,6 +375,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 count = old_data['job_type'].value_counts()
@@ -370,7 +392,7 @@ print(count)
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc freq data = old_data ;
@@ -381,6 +403,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 count = old_data.groupby(["job_type", "region"]).size().reset_index(name="count")
@@ -396,7 +420,7 @@ print(count)
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc summary data = old_data nway ;
@@ -410,6 +434,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 new_data = (
@@ -431,7 +457,7 @@ new_data = (
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc sort data=old_data out=new_data;
@@ -442,6 +468,8 @@ run
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -456,7 +484,7 @@ new_data = old_data.sort_values(by=["id","income"], ascending=[True,False])
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc sort data=old_data nodup;
@@ -467,6 +495,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -482,7 +512,7 @@ new_data = df.drop_duplicates(keep="first")
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc sort data=old_data nodupkey;
@@ -493,6 +523,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -508,7 +540,7 @@ old_data.drop_duplicates(subset=["id"], keep="first")
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -521,6 +553,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -541,7 +575,7 @@ new_data = old_data.groupby(["id"], as_index=False).first()
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -553,6 +587,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -568,7 +604,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -582,6 +618,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -599,7 +637,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -611,6 +649,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -629,7 +669,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -641,6 +681,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -663,7 +705,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -675,6 +717,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -691,7 +735,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -703,6 +747,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -721,7 +767,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data ;
@@ -732,6 +778,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 data_1 = pd.DataFrame(data1)
@@ -752,7 +800,7 @@ Resets the index, creating a continuous index across the rows.
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data ;
@@ -765,6 +813,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 data_1 = pd.DataFrame(data1)
@@ -786,7 +836,7 @@ Column `left_only`, `right_only`, `both`. <br>
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data ;
@@ -798,6 +848,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 data_1 = pd.DataFrame(data1)
@@ -832,7 +884,7 @@ new_data = new_data[new_data['_merge'] == 'both'].drop(columns=['_merge'])
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -844,6 +896,8 @@ run
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -862,7 +916,7 @@ new_data = old_data[old_data["job_title"].str.contains("Health",case=False, na=F
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -874,6 +928,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -889,7 +945,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -901,6 +957,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -919,7 +977,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 data new_data;
@@ -931,6 +989,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 old_data = pd.DataFrame(data)
@@ -955,7 +1015,7 @@ new_data = old_data
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc transpose data=long_data out=wide_data;
@@ -968,6 +1028,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 long_data = pd.DataFrame(data)
@@ -982,7 +1044,7 @@ wide_data = long_data.pivot(index='student', columns='subject', values='grade').
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc transpose data=wide_data
@@ -995,6 +1057,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 wide_data = pd.DataFrame(data)
@@ -1022,7 +1086,7 @@ long_data = wide_data.melt(
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 %macro add_variable(dataset_name);
@@ -1038,6 +1102,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 def add_variable(dataset_name):
@@ -1057,7 +1123,7 @@ my_data = add_variable(my_data)
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc export data = my_data
@@ -1068,6 +1134,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 my_data = pd.DataFrame(data)
@@ -1083,7 +1151,7 @@ my_data.to_csv('my_file.csv', index=False)
 
 <div class="g-col-4">
 
-##### SAS
+###### SAS
 
 ``` sas
 proc import datafile = "my_file.csv"
@@ -1094,6 +1162,8 @@ run;
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 my_data = pd.read_csv('my_file.csv')
@@ -1117,6 +1187,8 @@ geom_point( ) + geom_line( )
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Create the plot
@@ -1165,6 +1237,8 @@ labs(x = "" , y = "Sales per year")
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Create the plot
@@ -1215,6 +1289,8 @@ geom_point( ) + geom_line( )
 
 <div class="g-col-8">
 
+###### python
+
 ``` python
 # Create the plot
 plt.figure(figsize=(8, 6))
@@ -1264,6 +1340,8 @@ geom_col( )
 
 <div class="g-col-8">
 
+###### python
+
 ``` python
 # Create the bar plot
 plt.figure(figsize=(10, 6))
@@ -1302,6 +1380,8 @@ geom_col( position = "dodge" ) + coord_flip( )
 </div>
 
 <div class="g-col-8">
+
+###### python
 
 ``` python
 # Prepare data for horizontal dodged bars
