@@ -51,6 +51,8 @@ new_data = old_data
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data (keep=id);
 set old_data (drop=job_title) ;
@@ -75,6 +77,8 @@ new_data = old_data[['id']]
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data (drop= temp: );
 set old_data;
@@ -96,6 +100,8 @@ new_data = old_data.drop(columns=[col for col in old_data.columns if col.startsw
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -122,6 +128,8 @@ new_data = old_data.rename(columns={"old_name": "new_name"}, inplace=True)
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data;
@@ -144,6 +152,8 @@ new_data = old_data[old_data["Sex"] == "M"]
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -168,6 +178,8 @@ new_data = old_data[old_data["year"].isin([2010,2011,2012])]
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data;
@@ -191,6 +203,8 @@ new_data = old_data.groupby("id").head(1)
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -219,6 +233,8 @@ new_data = old_data[old_data["dob"] > "1990-04-25"]
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -252,6 +268,8 @@ new_data = old_data
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data;
@@ -281,6 +299,8 @@ new_data = old_data
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -324,6 +344,8 @@ new_data = old_data
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 proc freq data = old_data ;
 table job_type ;
@@ -348,6 +370,8 @@ print(count)
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 proc freq data = old_data ;
 table job_type*region ;
@@ -371,6 +395,8 @@ print(count)
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 proc summary data = old_data nway ;
@@ -405,6 +431,8 @@ new_data = (
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 proc sort data=old_data out=new_data;
 by id descending income ;
@@ -427,6 +455,8 @@ new_data = old_data.sort_values(by=["id","income"], ascending=[True,False])
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 proc sort data=old_data nodup;
@@ -452,6 +482,8 @@ new_data = df.drop_duplicates(keep="first")
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 proc sort data=old_data nodupkey;
 by id ;
@@ -475,6 +507,8 @@ old_data.drop_duplicates(subset=["id"], keep="first")
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -507,6 +541,8 @@ new_data = old_data.groupby(["id"], as_index=False).first()
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data;
@@ -531,6 +567,8 @@ new_data = old_data
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -561,6 +599,8 @@ new_data = old_data
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data ;
@@ -588,6 +628,8 @@ new_data = old_data
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -621,6 +663,8 @@ new_data = old_data
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data ;
@@ -646,6 +690,8 @@ new_data = old_data
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -675,6 +721,8 @@ new_data = old_data
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data ;
 set data_1 data_2 ;
@@ -703,6 +751,8 @@ Resets the index, creating a continuous index across the rows.
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data ;
@@ -735,6 +785,8 @@ Column `left_only`, `right_only`, `both`. <br>
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data ;
@@ -780,6 +832,8 @@ new_data = new_data[new_data['_merge'] == 'both'].drop(columns=['_merge'])
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data;
@@ -808,6 +862,8 @@ new_data = old_data[old_data["job_title"].str.contains("Health",case=False, na=F
 
 <div class="g-col-4">
 
+##### SAS
+
 ``` sas
 data new_data;
 set old_data;
@@ -832,6 +888,8 @@ new_data = old_data
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -860,6 +918,8 @@ new_data = old_data
 <div class="grid">
 
 <div class="g-col-4">
+
+##### SAS
 
 ``` sas
 data new_data;
@@ -895,7 +955,9 @@ new_data = old_data
 
 <div class="g-col-4">
 
-``` text
+##### SAS
+
+``` sas
 proc transpose data=long_data out=wide_data;
 by student ;
 id subject ;
@@ -920,7 +982,9 @@ wide_data = long_data.pivot(index='student', columns='subject', values='grade').
 
 <div class="g-col-4">
 
-``` text
+##### SAS
+
+``` sas
 proc transpose data=wide_data
 out=long_data(rename=(col1=grade)) name=subject;
 by student ;
@@ -958,7 +1022,9 @@ long_data = wide_data.melt(
 
 <div class="g-col-4">
 
-``` text
+##### SAS
+
+``` sas
 %macro add_variable(dataset_name);
 data &dataset_name;
 set &dataset_name;
@@ -991,7 +1057,9 @@ my_data = add_variable(my_data)
 
 <div class="g-col-4">
 
-``` text
+##### SAS
+
+``` sas
 proc export data = my_data
 outfile = "my_file.csv" dbms = csv replace;
 run;
@@ -1015,7 +1083,9 @@ my_data.to_csv('my_file.csv', index=False)
 
 <div class="g-col-4">
 
-``` text
+##### SAS
+
+``` sas
 proc import datafile = "my_file.csv"
 out = my_data dbms = csv;
 run;
