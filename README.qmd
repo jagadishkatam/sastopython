@@ -23,7 +23,12 @@ This guide aims to familiarise SAS users with Python. Python examples make use o
 
 ::::: grid
 ::: g-col-4
-```{sas sas}
+
+# SAS
+
+```{sas }
+
+
 data new_data;
 set old_data;
 run;
@@ -31,7 +36,10 @@ run;
 :::
 
 ::: g-col-8
-```{python python}
+# python
+```{python }
+
+
 old_data = pd.DataFrame(data)
 new_data = old_data
 ```
