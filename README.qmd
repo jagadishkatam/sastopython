@@ -1,14 +1,6 @@
 ---
 title: "SAS <-> Python :: CHEAT SHEET"
-format:
-  html:
-    css: styles.css
-    toc: true
-    toc-location: left
-    grid:
-      margin-width: 0px
-      body-width: 1100px
-editor: visual
+format: gfm
 execute:
   enabled: false
 ---
