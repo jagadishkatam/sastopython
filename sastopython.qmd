@@ -34,6 +34,7 @@ This guide aims to familiarise SAS users with Python. Python examples make use o
 ```{sas}
 data new_data;
 set old_data;
+
 run;
 ```
 :::
